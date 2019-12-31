@@ -2,6 +2,7 @@ package org.sgphule.javamaven.messenger.resources;
 
 import java.util.List;
 
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.sgphule.javamaven.messenger.model.Message;
+import org.sgphule.javamaven.messenger.resources.beans.MessageFilterBean;
 import org.sgphule.javamaven.messenger.service.MessageService;
 
 @Path("/messages")
@@ -24,13 +26,13 @@ public class MessageResource {
 	MessageService messageService = new MessageService();
 	
 	@GET
-	public List<Message> getMessages(@QueryParam("year") int year,@QueryParam("start") int start,@QueryParam("size") int size){
+	public List<Message> getMessages(@BeanParam MessageFilterBean filterBean){
 		
-		if(year > 0) {
-			return messageService.getAllmessagesForYear(year);
+		if(filterBean.getYear() > 0) {
+			return messageService.getAllmessagesForYear(filterBean.getYear());
 		}
-		if(start >= 0 && size > 0) {
-			return messageService.getAllMessagePaginated(start, size);
+		if(filterBean.getStart() >= 0 && filterBean.getSize() > 0) {
+			return messageService.getAllMessagePaginated(filterBean.getStart(), filterBean.getSize());
 		}
 		
 		return messageService.getAllMessages();
