@@ -1,6 +1,7 @@
 package org.sgphule.javamaven.messenger.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -15,18 +16,27 @@ public class MessageService {
 		messages.put(1L, new Message(1L, "Hello Germany","SGPhule1"));
 		messages.put(2L,new Message(2L, "Hello India!","SGPhule2"));
 	}
-	
 	public List<Message> getAllMessages(){
-		/* 
-		Message m1 = new Message(1L, "Hello Germany","SGPhule1");
-		Message m2 = new Message(2L, "Hello India!","SGPhule2");
-		List<Message> list = new ArrayList<>();
-		list.add(m1);
-		list.add(m2);
-		return list;
-		*/
 		return new ArrayList<Message>(messages.values());
 	}	
+	
+	public List<Message> getAllmessagesForYear(int year){
+		List<Message> messageForYear = new ArrayList<>();
+		Calendar cal = Calendar.getInstance();
+		for(Message message : messages.values()){
+			cal.setTime(message.getCreated());
+			if(cal.get(Calendar.YEAR)==year) {
+				messageForYear.add(message);
+			}
+		}
+		return messageForYear;		
+	}
+	public List<Message> getAllMessagePaginated(int start, int size){
+		ArrayList<Message> list = new ArrayList<Message>(messages.values());
+		if((start + size) > list.size()) return new ArrayList<Message>();
+		return list.subList(start, start + size);
+	}	
+	
 	public Message getMessage(Long id) {
 		return messages.get(id);
 	}	
