@@ -13,6 +13,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.sgphule.javamaven.messenger.model.Message;
 import org.sgphule.javamaven.messenger.resources.beans.MessageFilterBean;
@@ -39,8 +41,12 @@ public class MessageResource {
 		
 	}
 	@POST
-	public Message addMessage(Message message) {
-		return messageService.addMessage(message);
+	public Response addMessage(Message message) {
+		Message newMessage = messageService.addMessage(message);
+		return Response.status(Status.CREATED)
+				.entity(newMessage)
+				.build();
+		//return messageService.addMessage(message);
 	}
 	
 	@PUT
@@ -63,4 +69,11 @@ public class MessageResource {
 		
 		return messageService.getMessage(id);
 	}
+	
+	@Path("/{messageId}/comments")
+	public CommentResource getCommentResource() {
+		return new CommentResource();
+	}
+	
+	
 }
